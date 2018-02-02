@@ -7,6 +7,6 @@
         "sourceMap": true,
         "allowJs": false,
         "watch": true,
-        "target": "es6"
+        "target": "es5"
     }
 }
