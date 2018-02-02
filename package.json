@@ -1,0 +1,38 @@
+{
+  "name": "sparkson",
+  "version": "1.0.1",
+  "description": "Declarative JSON parsing and validation library for TypeScript",
+  "main": "./lib/sparkson.js",
+  "types": "./lib/sparkson.d.ts",
+  "scripts": {
+    "build": "gulp build",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sparkbitpl/sparkson.git"
+  },
+  "keywords": [
+    "JSON",
+    "TypeScript"
+  ],
+  "author": "Sparkbit",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sparkbitpl/sparkson/issues"
+  },
+  "homepage": "https://github.com/sparkbitpl/sparkson#readme",
+  "dependencies": {
+    "lodash": "4.17.4",
+    "reflect-metadata": "^0.1.12",
+    "typescript": "2.7.1"
+  },
+  "devDependencies": {
+    "del": "3.0.0",
+    "gulp": "3.9.1",
+    "gulp-sourcemaps": "2.6.4",
+    "gulp-typescript": "3.2.4",
+    "path": "0.12.7",
+    "run-sequence": "2.2.1"
+  }
+}
