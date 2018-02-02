@@ -3,7 +3,7 @@
   "version": "1.1.2",
   "description": "Declarative JSON parsing and validation library for TypeScript",
   "main": "./lib/sparkson.js",
-  "types": "./lib/sparkson.d.ts",
+  "types": "./dts/sparkson.d.ts",
   "scripts": {
     "build": "gulp build",
     "test": "echo \"Error: no test specified\" && exit 1"

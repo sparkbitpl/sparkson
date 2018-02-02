@@ -1,3 +1,4 @@
 node_modules/
 lib/
+dts/
 npm-debug.log

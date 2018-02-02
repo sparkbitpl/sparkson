@@ -7,7 +7,7 @@ const ts = require("gulp-typescript");
 
 
 gulp.task("clean", () => {
-    return del(["lib"]);
+    return del(["lib", "dts"]);
 });
 
 const tsProject = ts.createProject("tsconfig.json");
@@ -31,7 +31,7 @@ const dtsProject = ts.createProject("tsconfig.json", {declaration: true});
 gulp.task("generate-dts", () => {
     const tsResult = dtsProject.src()
         .pipe(dtsProject());
-    return tsResult.dts.pipe(gulp.dest("lib"));
+    return tsResult.dts.pipe(gulp.dest("dts"));
 });
 
 gulp.task("build", (cb) =>
