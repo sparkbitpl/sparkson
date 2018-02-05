@@ -30,9 +30,11 @@
   "devDependencies": {
     "del": "3.0.0",
     "gulp": "3.9.1",
+    "gulp-if": "2.0.2",
     "gulp-sourcemaps": "2.6.4",
     "gulp-typescript": "3.2.4",
     "path": "0.12.7",
-    "run-sequence": "2.2.1"
+    "run-sequence": "2.2.1",
+    "yargs": "11.0.0"
   }
 }
