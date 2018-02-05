@@ -6,6 +6,5 @@ export {RefType} from "./core/RefType";
 export {ArrayField} from "./decorators/ArrayField";
 export {Field} from "./decorators/Field";
 
-import * as r from "reflect-metadata";
+import "reflect-metadata";
 
-console.log(r);
