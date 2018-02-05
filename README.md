@@ -65,6 +65,16 @@ will contain the location and type of the encountered problem.
 `@ArrayField` accepts and additional parameter - type of the array elements. Without this parameter Sparkson would not be able
 to validate the type of the array elements.
 
+Now, we can parse the service response in the following way:
+```typescript
+import {parse} from "sparkson";
+
+fetch("/authors/123").then((response) => {
+    // TypeScript will infere here that author is of type Author
+    const author = parse(Author, response.json());
+});
+
+```
 Mapping Dates
 -----
 Sparkson can automatically parse dates:
