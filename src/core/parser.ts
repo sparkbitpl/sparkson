@@ -59,13 +59,8 @@ import {JsonParseError, JsonParseErrorCode} from "./JsonParseError";
     }
     function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?: GenericTypes): any {
         let getMetadata = (<any>Reflect).getMetadata;
-        let isModel = getMetadata("@Model", cls);
-        if (!isModel) {
-            if (isSimpleType(cls)) {
-                return parseValue(cls, json, {propName: "array", type: cls, optional: true}, prefix);
-            }
-            throw new JsonParseError("Only @Model annotated classes or simple type objects can be deserialized."
-                + " Cannot deserialize class " + getName(cls) + " at " + prefix, JsonParseErrorCode.MISSING_ANNOTATION);
+        if (isSimpleType(cls)) {
+            return parseValue(cls, json, {propName: "array", type: cls, optional: true}, prefix);
         }
         let constructorParams = <Array<RefType<any>>> _.clone(getMetadata("design:paramtypes", cls));
         if (!constructorParams) {

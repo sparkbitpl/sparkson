@@ -5,4 +5,3 @@ export {RefType} from "./core/RefType";
 
 export {ArrayField} from "./decorators/ArrayField";
 export {Field} from "./decorators/Field";
-export {Model} from "./decorators/Model";
