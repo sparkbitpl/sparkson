@@ -44,9 +44,9 @@ import {JsonParseError, JsonParseErrorCode} from "./JsonParseError";
                     fieldValue => {
                         const [ , year, month, day] = regExp.exec(fieldValue);
                         if (!_.isUndefined(day)) {
-                            return new Date(Date.UTC(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10)));
+                            return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
                         } else {
-                            return new Date(Date.UTC(parseInt(year, 10), parseInt(month, 10) - 1));
+                            return new Date(parseInt(year, 10), parseInt(month, 10) - 1);
                         }
                     },
                     () => new JsonParseError("Expected a Date object for property " + propName(), JsonParseErrorCode.INVALID_TYPE));

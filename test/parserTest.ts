@@ -22,6 +22,10 @@ class Recursive {
     constructor(@Field("name") public name: string, @Field("next", true) public next?: Recursive) {}
 }
 
+class OptionalDate {
+    constructor(@Field("optional", true) public date?: DateClass) {}
+}
+
 describe("sparkson", () => {
     it("should parse a simple object", () => {
         let simple = parse(Simple, {someString: "foo", someNumber: 42, someBoolean: true});
@@ -32,7 +36,10 @@ describe("sparkson", () => {
 
     it("should parse a date", () => {
         let withDate = parse(WithDate, {date: "2018-02-03"});
-        expect(withDate.date.getTime()).toEqual(1517616000000);
+        expect(withDate.date.getFullYear()).toEqual(2018);
+        expect(withDate.date.getMonth()).toEqual(1);
+        expect(withDate.date.getDate()).toEqual(3);
+        expect(withDate.date.getHours()).toEqual(0);
     });
 
     it("should parse an object with optional params", () => {
@@ -75,4 +82,8 @@ describe("sparkson", () => {
         expect(() => parse(Simple, {someString: "foo"})).toThrow(jasmine.any(JsonParseError));
     });
 
+    it("should allow for optional dates", () => {
+        const obj = parse(OptionalDate, {});
+        expect(obj.date).toBeUndefined();
+    })
 })
