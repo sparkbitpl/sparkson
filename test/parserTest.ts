@@ -44,11 +44,11 @@ describe("sparkson", () => {
     });
 
     it("should parse a date with time", () => {
-        let withDate = parse(WithDate, {date: "2018-02-03T11:15:21"});
+        let withDate = parse(WithDate, {date: "2018-02-03T11:15:21+01:00"});
         expect(withDate.date.getFullYear()).toEqual(2018);
         expect(withDate.date.getMonth()).toEqual(1);
         expect(withDate.date.getDate()).toEqual(3);
-        expect(withDate.date.getHours()).toEqual(11);
+        expect(withDate.date.getUTCHours()).toEqual(10);
         expect(withDate.date.getMinutes()).toEqual(15);
         expect(withDate.date.getSeconds()).toEqual(21);
     });

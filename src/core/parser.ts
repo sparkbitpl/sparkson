@@ -37,22 +37,22 @@ import {JsonParseError, JsonParseErrorCode} from "./JsonParseError";
                     fieldValue => <boolean> fieldValue,
                     () => new JsonParseError("Expected a boolean value for property " + propName(), JsonParseErrorCode.INVALID_TYPE));
             case "DateClass":
-                const regExp = /(\d{4})-(\d{2})(?:-(\d{2}))?(?:.(\d{2}):(\d{2}):(\d{2}))?.*/;
+                const isoRegexp =
+                  /(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d\.\d+)|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d)|(\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d)/;
+                const regExp = /(\d{4})-(\d{2})(?:-(\d{2}))/;
                 return tryReadField(json, fieldValue => {
-                        return regExp.test(fieldValue);
+                        return isoRegexp.test(fieldValue) || regExp.test(fieldValue);
                     },
                     fieldValue => {
-                        const [ , year, month, day, hour, minute, sec] = regExp.exec(fieldValue);
-                        let ret: Date;
+                        if (isoRegexp.test(fieldValue)) {
+                            return new Date(Date.parse(fieldValue));
+                        }
+                        const [ , year, month, day] = regExp.exec(fieldValue);
                         if (!_.isUndefined(day)) {
-                            ret = new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
+                            return new Date(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10));
                         } else {
-                            ret = new Date(parseInt(year, 10), parseInt(month, 10) - 1);
+                            return new Date(parseInt(year, 10), parseInt(month, 10) - 1);
                         }
-                        if (!_.isUndefined(hour) && !_.isUndefined(minute) && !_.isUndefined(sec)) {
-                            ret.setHours(parseInt(hour), parseInt(minute), parseInt(sec));
-                        }
-                        return ret;
                     },
                     () => new JsonParseError("Expected a Date object for property " + propName(), JsonParseErrorCode.INVALID_TYPE));
             case "Array":
