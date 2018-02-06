@@ -37,14 +37,19 @@ import {JsonParseError, JsonParseErrorCode} from "./JsonParseError";
                     fieldValue => <boolean> fieldValue,
                     () => new JsonParseError("Expected a boolean value for property " + propName(), JsonParseErrorCode.INVALID_TYPE));
             case "DateClass":
-                if (typeof json !== "string") {
-                    throw new JsonParseError("Expected a Date object for property " + propName(), JsonParseErrorCode.INVALID_TYPE);
-                }
-                const parsed = new Date(<string>json);
-                if (isNaN(parsed.getDate())) {
-                    throw new JsonParseError("Expected a Date object for property " + propName(), JsonParseErrorCode.INVALID_TYPE);
-                }
-                return parsed;
+                const regExp = /(\d{4})-(\d{2})(?:-(\d{2}))?.*/;
+                return tryReadField(json, fieldValue => {
+                        return regExp.test(fieldValue);
+                    },
+                    fieldValue => {
+                        const [ , year, month, day] = regExp.exec(fieldValue);
+                        if (!_.isUndefined(day)) {
+                            return new Date(Date.UTC(parseInt(year, 10), parseInt(month, 10) - 1, parseInt(day, 10)));
+                        } else {
+                            return new Date(Date.UTC(parseInt(year, 10), parseInt(month, 10) - 1));
+                        }
+                    },
+                    () => new JsonParseError("Expected a Date object for property " + propName(), JsonParseErrorCode.INVALID_TYPE));
             case "Array":
                 if (!spec.type) {
                     throw new JsonParseError("Missing type annotation for array property " + propName(), JsonParseErrorCode.INVALID_TYPE);
