@@ -6,5 +6,9 @@ export {RefType} from "./core/RefType";
 export {ArrayField} from "./decorators/ArrayField";
 export {Field} from "./decorators/Field";
 
-import "reflect-metadata";
+declare function require(moduleName: string): any;
+
+if (!Reflect || !Reflect.defineMetadata) {
+    require("reflect-metadata");
+}
 
