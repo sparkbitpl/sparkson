@@ -1,4 +1,5 @@
 import "jasmine";
+import "reflect-metadata";
 import {DateClass, Field, ArrayField, parse, JsonParseError} from "../src/sparkson"
 
 // auxiliary model classes
@@ -40,6 +41,16 @@ describe("sparkson", () => {
         expect(withDate.date.getMonth()).toEqual(1);
         expect(withDate.date.getDate()).toEqual(3);
         expect(withDate.date.getHours()).toEqual(0);
+    });
+
+    it("should parse a date with time", () => {
+        let withDate = parse(WithDate, {date: "2018-02-03T11:15:21"});
+        expect(withDate.date.getFullYear()).toEqual(2018);
+        expect(withDate.date.getMonth()).toEqual(1);
+        expect(withDate.date.getDate()).toEqual(3);
+        expect(withDate.date.getHours()).toEqual(11);
+        expect(withDate.date.getMinutes()).toEqual(15);
+        expect(withDate.date.getSeconds()).toEqual(21);
     });
 
     it("should parse an object with optional params", () => {
