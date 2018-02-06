@@ -5,7 +5,7 @@
   "main": "./lib/sparkson.js",
   "types": "./dts/sparkson.d.ts",
   "scripts": {
-    "build": "gulp build && npm run test",
+    "build": "npm run test && gulp build",
     "test": "jasmine-ts \"test/**/*.ts\""
   },
   "repository": {
