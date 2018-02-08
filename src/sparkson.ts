@@ -11,9 +11,13 @@ export {Max} from "./decorators/validation/Max";
 
 export {MinLength} from "./decorators/validation/MinLength";
 export {MaxLength} from "./decorators/validation/MaxLength";
+export {Regexp} from "./decorators/validation/Regexp";
 
 export {After} from "./decorators/validation/After";
 export {Before} from "./decorators/validation/Before";
+
+export {Email} from "./decorators/validation/Email";
+export {Rule} from "./decorators/validation/Rule";
 
 declare function require(moduleName: string): any;
 

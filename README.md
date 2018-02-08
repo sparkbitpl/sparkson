@@ -121,17 +121,29 @@ Sparkson supports validation of parameter values. It provides the following vali
  - `@MaxLength(value)` - checks if length of a string parameter is not greater than `value`
  - `@Before(date)` - checks if a date parameter is before `date`
  - `@After(date)` - checks if a date parameter is after `date`
+ - `@Rule(customFn)` - checks if the parameter passes custom validation function. The validation function should have signature `(val: any) => string`.
+ It should return either `null` (if the parameters passes the validation) or an error message
+ - `@Regexp(expr)` - checks if a string parameter matches the given regular expression `expr`
+ - `@Email()` - checks if a string parameter is a valid email address
 
 The validation decorators can be applied either to a parameter of simple type or to an array parameter.
 In the latter case, all values within the array must satisfy the validation rule. It is possible to apply
 more than one validation rule to the same parameter, as can be seen in the following example:
 ```typescript
-import {ArrayField, Field, Min, Max} from "sparkson";
+import {ArrayField, Field, Max, Min, Regexp, Rule} from "sparkson";
+
+function ensureEven(value: number) {
+    if (value % 2 === 0) {
+        return null;
+    }
+    return "Even number required";
+}
 
 export class ValidateMe {
     constructor(
         @Field("in_range") @Min(1) @Max(5) public inRange: number,
-        @ArrayField("values", Number) @Min(1) public values: number[]
+        @Field("even") @Rule(ensureEven) public even: number,
+        @ArrayField("values", string) @Regexp(/ab.*/) public values: string[]
     ) {}
 }
 

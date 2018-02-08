@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/sparkbitpl/sparkson#readme",
   "dependencies": {
+    "isemail": "3.1.1",
     "lodash": "4.17.4",
     "reflect-metadata": "0.1.12",
     "typescript": "2.7.1"

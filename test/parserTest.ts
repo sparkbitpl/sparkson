@@ -1,6 +1,6 @@
 import "jasmine";
 import "reflect-metadata";
-import {DateClass, Field, ArrayField, Max, Min, Before, After,
+import {DateClass, Field, ArrayField, Max, Min, Before, After, Regexp, Rule, Email,
     MinLength, MaxLength, parse, JsonParseError} from "../src/sparkson"
 
 // auxiliary model classes
@@ -60,7 +60,53 @@ class WithAfter {
     constructor(@Field("date") @After("2018-02-08") public date: DateClass) {}
 }
 
+class WithRegex {
+    constructor(@Field("str") @Regexp(/aa.*/) public str: string) {}
+}
+
+function ensureEven(val: number) {
+    if (val % 2 === 0) {
+        return null;
+    }
+    return "Must be even!";
+}
+
+class WithRule {
+    constructor(@Field("even") @Rule(ensureEven) public even: number) {}
+}
+
+class WithEmail {
+constructor(@Field("email") @Email() public email: string) {}
+}
 describe("sparkson", () => {
+    it("should pass @Email validation", () => {
+        let validated = parse(WithEmail, {email: "test@gmail.com"});
+        // check if it didn't throw
+    });
+
+    it("should fail @Email validation", () => {
+        expect(() => parse(WithEmail, {email: "this!is!not$anemail"})).toThrow(jasmine.any(JsonParseError));
+    });
+
+    it("should pass @Rule validation", () => {
+        let validated = parse(WithRule, {even: 42});
+        // check if it didn't throw
+    });
+
+    it("should fail @Rule validation", () => {
+        expect(() => parse(WithRule, {even: 1})).toThrow(jasmine.any(JsonParseError));
+    });
+
+    it("should pass @Regexp validation", () => {
+        let validated = parse(WithRegex, {str: "aaa"});
+        // check if it didn't throw
+    });
+
+    it("should fail @Regexp validation", () => {
+        expect(() => parse(WithRegex, {str: "bbb"})).toThrow(jasmine.any(JsonParseError));
+    });
+
+
     it("should pass @Before validation", () => {
         let validated = parse(WithBefore, {date: "2018-02-07"});
         // check if it didn't throw
