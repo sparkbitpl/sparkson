@@ -1,6 +1,6 @@
 import "jasmine";
 import "reflect-metadata";
-import {DateClass, Field, ArrayField, parse, JsonParseError} from "../src/sparkson"
+import {DateClass, Field, ArrayField, Max, Min, parse, JsonParseError} from "../src/sparkson"
 
 // auxiliary model classes
 class Simple {
@@ -27,7 +27,56 @@ class OptionalDate {
     constructor(@Field("optional", true) public date?: DateClass) {}
 }
 
+class WithMin {
+    constructor(@Field("value") @Min(3) public value: number) {}
+}
+
+class WithMax {
+    constructor(@Field("value") @Max(3) public value: number) {}
+}
+
+class WithMinMax {
+    constructor(@Field("value") @Min(1) @Max(3) public value: number) {}
+}
+
+class WithMinOnArray {
+    constructor(@ArrayField("values", Number) @Min(1) public values: number[]) {}
+}
+
 describe("sparkson", () => {
+    it("should pass @Min validation", () => {
+        let validated = parse(WithMin, {value: 4});
+        expect(validated.value).toBe(4);
+    });
+
+    it("should fail @Min validation", () => {
+        expect(() => parse(WithMax, {value: 4})).toThrow(jasmine.any(JsonParseError));
+    });
+
+    it("should pass @Max validation", () => {
+        let validated = parse(WithMax, {value: 2});
+        expect(validated.value).toBe(2);
+    });
+
+    it("should pass @Min and @Max validation", () => {
+        let validated = parse(WithMinMax, {value: 2});
+        expect(validated.value).toBe(2);
+    });
+
+    it("should fail @Max validation", () => {
+        expect(() => parse(WithMin, {value: 2})).toThrow(jasmine.any(JsonParseError));
+    });
+
+    it("should pass @Min validation on an array", () => {
+        let validated = parse(WithMinOnArray, {values: [5, 6, 7, 8]});
+        expect(1).toBe(1); // just expect that there was no error
+    });
+
+    it("should fail @Min validation on an array", () => {
+        expect(() => parse(WithMinOnArray, {values: [7, 8, -10, 12]})).toThrow(jasmine.any(JsonParseError));
+    });
+
+
     it("should parse a simple object", () => {
         let simple = parse(Simple, {someString: "foo", someNumber: 42, someBoolean: true});
         expect(simple.str).toBe("foo");

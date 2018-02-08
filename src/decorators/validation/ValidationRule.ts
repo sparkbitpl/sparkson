@@ -1,0 +1,1 @@
+export type ValidationRule = (fieldValue: any) => string;

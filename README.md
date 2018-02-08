@@ -111,3 +111,24 @@ export class Example {
 }
 
 ```
+
+Validation
+-----
+Sparkson supports validation of parameter values. It provides the following validation decorators:
+ - `@Min(value)` - checks if the parameter value is not smaller than `value`
+ - `@Max(value)` - checks if the parameter value is not greater than `value`
+
+The validation decorators can be applied either to a parameter of simple type or to an array parameter.
+In the latter case, all values within the array must satisfy the validation rule. It is possible to apply
+more than one validation rule to the same parameter, as can be seen in the following example:
+```typescript
+import {ArrayField, Field, Min, Max} from "sparkson";
+
+export class ValidateMe {
+    constructor(
+        @Field("in_range") @Min(1) @Max(5) public inRange: number,
+        @ArrayField("values", Number) @Min(1) public values: number[]
+    ) {}
+}
+
+```
