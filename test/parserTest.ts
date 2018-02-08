@@ -1,6 +1,7 @@
 import "jasmine";
 import "reflect-metadata";
-import {DateClass, Field, ArrayField, Max, Min, parse, JsonParseError} from "../src/sparkson"
+import {DateClass, Field, ArrayField, Max, Min,
+    MinLength, MaxLength, parse, JsonParseError} from "../src/sparkson"
 
 // auxiliary model classes
 class Simple {
@@ -43,14 +44,40 @@ class WithMinOnArray {
     constructor(@ArrayField("values", Number) @Min(1) public values: number[]) {}
 }
 
+class WithMinLength {
+    constructor(@Field("value") @MinLength(3) public value: string) {}
+}
+
+class WithMaxLength {
+    constructor(@Field("value") @MaxLength(3) public value: string) {}
+}
+
 describe("sparkson", () => {
     it("should pass @Min validation", () => {
         let validated = parse(WithMin, {value: 4});
         expect(validated.value).toBe(4);
     });
 
-    it("should fail @Min validation", () => {
+    it("should fail @Max validation", () => {
         expect(() => parse(WithMax, {value: 4})).toThrow(jasmine.any(JsonParseError));
+    });
+
+    it("should pass @MinLength validation", () => {
+        let validated = parse(WithMinLength, {value: "abcd"});
+        expect(validated.value).toBe("abcd");
+    });
+
+    it("should fail @MinLength validation", () => {
+        expect(() => parse(WithMinLength, {value: "ab"})).toThrow(jasmine.any(JsonParseError));
+    });
+
+    it("should pass @MaxLength validation", () => {
+        let validated = parse(WithMaxLength, {value: "ab"});
+        expect(validated.value).toBe("ab");
+    });
+
+    it("should fail @MaxLength validation", () => {
+        expect(() => parse(WithMaxLength, {value: "abcd"})).toThrow(jasmine.any(JsonParseError));
     });
 
     it("should pass @Max validation", () => {
@@ -63,7 +90,7 @@ describe("sparkson", () => {
         expect(validated.value).toBe(2);
     });
 
-    it("should fail @Max validation", () => {
+    it("should fail @Min validation", () => {
         expect(() => parse(WithMin, {value: 2})).toThrow(jasmine.any(JsonParseError));
     });
 

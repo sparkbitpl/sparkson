@@ -117,6 +117,8 @@ Validation
 Sparkson supports validation of parameter values. It provides the following validation decorators:
  - `@Min(value)` - checks if the parameter value is not smaller than `value`
  - `@Max(value)` - checks if the parameter value is not greater than `value`
+ - `@MinLength(value)` - checks if length of a string parameter is not smaller than `value`
+ - `@MaxLength(value)` - checks if length of a string parameter is not greater than `value`
 
 The validation decorators can be applied either to a parameter of simple type or to an array parameter.
 In the latter case, all values within the array must satisfy the validation rule. It is possible to apply

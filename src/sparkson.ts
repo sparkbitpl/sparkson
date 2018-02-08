@@ -9,6 +9,9 @@ export {Field} from "./decorators/Field";
 export {Min} from "./decorators/validation/Min";
 export {Max} from "./decorators/validation/Max";
 
+export {MinLength} from "./decorators/validation/MinLength";
+export {MaxLength} from "./decorators/validation/MaxLength";
+
 declare function require(moduleName: string): any;
 
 if (!Reflect || !Reflect.defineMetadata) {
