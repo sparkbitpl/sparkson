@@ -1,6 +1,6 @@
 import "jasmine";
 import "reflect-metadata";
-import {DateClass, Field, ArrayField, Max, Min,
+import {DateClass, Field, ArrayField, Max, Min, Before, After,
     MinLength, MaxLength, parse, JsonParseError} from "../src/sparkson"
 
 // auxiliary model classes
@@ -52,7 +52,33 @@ class WithMaxLength {
     constructor(@Field("value") @MaxLength(3) public value: string) {}
 }
 
+class WithBefore {
+    constructor(@Field("date") @Before("2018-02-08") public date: DateClass) {}
+}
+
+class WithAfter {
+    constructor(@Field("date") @After("2018-02-08") public date: DateClass) {}
+}
+
 describe("sparkson", () => {
+    it("should pass @Before validation", () => {
+        let validated = parse(WithBefore, {date: "2018-02-07"});
+        // check if it didn't throw
+    });
+
+    it("should pass @After validation", () => {
+        let validated = parse(WithAfter, {date: "2018-02-09"});
+        // check if it didn't throw
+    });
+
+    it("should fail @After validation", () => {
+        expect(() => parse(WithAfter, {date: "2018-02-08"})).toThrow(jasmine.any(JsonParseError));
+    });
+
+    it("should fail @Before validation", () => {
+        expect(() => parse(WithBefore, {date: "2018-02-08"})).toThrow(jasmine.any(JsonParseError));
+    });
+
     it("should pass @Min validation", () => {
         let validated = parse(WithMin, {value: 4});
         expect(validated.value).toBe(4);

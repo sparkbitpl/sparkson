@@ -3,13 +3,13 @@ import {addValidationRule} from "./ValidationHelper";
 
 export function MinLength(value: number) {
     return (target: Object, propertyKey: string | symbol, parameterIndex: number) => {
-        const minValidator = (fieldValue) => {
+        const minLengthValidator = (fieldValue) => {
 
-            if (fieldValue.length && fieldValue.length < value) {
+            if (fieldValue.length !== undefined && fieldValue.length < value) {
                 return `Value cannot be shorter than ${value}`;
             }
             return null;
         }
-        addValidationRule(target, parameterIndex, minValidator);
+        addValidationRule(target, parameterIndex, minLengthValidator);
     };
 }
