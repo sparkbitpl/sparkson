@@ -111,6 +111,30 @@ export class Example {
 }
 
 ```
+Custom Mappers
+-----
+Sparkson provides a mechanism for defining custom mappings. For example, imagine that your API returns some big numbers encoded as
+strings:
+```json
+{
+    "big_number": "123456789123456789"
+}
+```
+which you'd like to parse into a `BigNumber` class:
+```typescript
+import {BigNumber} from "bignumber";
+
+export class Response {
+    constructor(@Field("big_number") public num: BigNumber) {}
+}
+```
+Register a mapping from `string` to `BigNumber` in the following way:
+```typescript
+import {registerStringMapping} from "sparkson";
+import {BigNumber} from "bignumber";
+registerStringMapping(BigNumber, (val: string) => new BigNumber(val));
+```
+and Sparkson will parse the object for you.
 
 Validation
 -----

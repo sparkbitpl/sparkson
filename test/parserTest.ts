@@ -1,7 +1,7 @@
 import "jasmine";
 import "reflect-metadata";
 import {DateClass, Field, ArrayField, Max, Min, Before, After, Regexp, Rule, Email,
-    MinLength, MaxLength, parse, JsonParseError} from "../src/sparkson"
+    MinLength, MaxLength, parse, JsonParseError, registerStringMapper, registerNumberMapper} from "../src/sparkson"
 
 // auxiliary model classes
 class Simple {
@@ -78,6 +78,18 @@ class WithRule {
 class WithEmail {
 constructor(@Field("email") @Email() public email: string) {}
 }
+
+class Mapped {
+    constructor(a: string) {}
+    public getValue(): string {
+        return "boom";
+    }
+}
+
+class WithMapped {
+    constructor(@Field("mapped") public mapped: Mapped) {}
+}
+
 describe("sparkson", () => {
     it("should pass @Email validation", () => {
         let validated = parse(WithEmail, {email: "test@gmail.com"});
@@ -244,5 +256,11 @@ describe("sparkson", () => {
     it("should allow for optional dates", () => {
         const obj = parse(OptionalDate, {});
         expect(obj.date).toBeUndefined();
+    })
+
+    it("should parse a mapped field", () => {
+        registerStringMapper(Mapped, (v: string) => new Mapped(v));
+        const obj = parse(WithMapped, {mapped: "foo"});
+        expect(obj.mapped.getValue()).toBe("boom");
     })
 })
