@@ -1,6 +1,6 @@
 import "jasmine";
 import "reflect-metadata";
-import {DateClass, Field, ArrayField, Max, Min, Before, After, Regexp, Rule, Email,
+import {DateClass, Field, ArrayField, Max, Min, Before, After, Regexp, Rule,
     MinLength, MaxLength, parse, JsonParseError, registerStringMapper, registerNumberMapper} from "../src/sparkson"
 
 // auxiliary model classes
@@ -75,9 +75,9 @@ class WithRule {
     constructor(@Field("even") @Rule(ensureEven) public even: number) {}
 }
 
-class WithEmail {
-constructor(@Field("email") @Email() public email: string) {}
-}
+// class WithEmail {
+// constructor(@Field("email") @Email() public email: string) {}
+// }
 
 class Mapped {
     constructor(a: string) {}
@@ -91,14 +91,15 @@ class WithMapped {
 }
 
 describe("sparkson", () => {
-    it("should pass @Email validation", () => {
-        let validated = parse(WithEmail, {email: "test@gmail.com"});
-        // check if it didn't throw
-    });
+    // email validation is temporarily disabled
+    // it("should pass @Email validation", () => {
+    //     let validated = parse(WithEmail, {email: "test@gmail.com"});
+    //     // check if it didn't throw
+    // });
 
-    it("should fail @Email validation", () => {
-        expect(() => parse(WithEmail, {email: "this!is!not$anemail"})).toThrow(jasmine.any(JsonParseError));
-    });
+    // it("should fail @Email validation", () => {
+    //     expect(() => parse(WithEmail, {email: "this!is!not$anemail"})).toThrow(jasmine.any(JsonParseError));
+    // });
 
     it("should pass @Rule validation", () => {
         let validated = parse(WithRule, {even: 42});

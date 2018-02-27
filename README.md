@@ -148,7 +148,7 @@ Sparkson supports validation of parameter values. It provides the following vali
  - `@Rule(customFn)` - checks if the parameter passes custom validation function. The validation function should have signature `(val: any) => string`.
  It should return either `null` (if the parameters passes the validation) or an error message
  - `@Regexp(expr)` - checks if a string parameter matches the given regular expression `expr`
- - `@Email()` - checks if a string parameter is a valid email address
+
 
 The validation decorators can be applied either to a parameter of simple type or to an array parameter.
 In the latter case, all values within the array must satisfy the validation rule. It is possible to apply
