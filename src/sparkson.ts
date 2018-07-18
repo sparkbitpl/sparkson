@@ -18,6 +18,8 @@ export {Before} from "./decorators/validation/Before";
 
 export {Rule} from "./decorators/validation/Rule";
 
+export {Registrable} from "./decorators/Registrable";
+
 declare function require(moduleName: string): any;
 
 if (!Reflect || !Reflect.defineMetadata) {

@@ -1,6 +1,6 @@
 import "jasmine";
 import "reflect-metadata";
-import {DateClass, Field, ArrayField, Max, Min, Before, After, Regexp, Rule,
+import {DateClass, Field, ArrayField, Registrable, Max, Min, Before, After, Regexp, Rule,
     MinLength, MaxLength, parse, JsonParseError, registerStringMapper, registerNumberMapper} from "../src/sparkson"
 
 // auxiliary model classes
@@ -79,6 +79,7 @@ class WithRule {
 // constructor(@Field("email") @Email() public email: string) {}
 // }
 
+@Registrable
 class Mapped {
     constructor(a: string) {}
     public getValue(): string {

@@ -4,7 +4,7 @@ import {GenericTypes} from "./GenericTypes";
 import {ValidationRule} from "../decorators/validation/ValidationRule";
 import {JsonParseError, JsonParseErrorCode} from "./JsonParseError";
 import * as dateUtils from "../utils/DateUtils";
-
+//import * as Reflect from "reflect-metadata";
 /*tslint:disable no-any*/
 const mapperRegister: {[typeName: string]: Mapper<any, any>} = {};
 
@@ -12,15 +12,15 @@ export type Mapper<P, T> = (param: P) => T;
 
 
 export function registerStringMapper<T>(type: RefType<T>, mapper: Mapper<string, T>) {
-    mapperRegister[type["name"] + "_string"] = mapper;
+    mapperRegister[getName(type) + "_string"] = mapper;
 }
 
 export function registerNumberMapper<T>(type: RefType<T>, mapper: Mapper<number, T>) {
-    mapperRegister[type["name"] + "_number"] = mapper;
+    mapperRegister[getName(type) + "_number"] = mapper;
 }
 
 export function registerBooleanMapper<T>(type: RefType<T>, mapper: Mapper<boolean, T>) {
-    mapperRegister[type["name"] + "_boolean"] = mapper;
+    mapperRegister[getName(type) + "_boolean"] = mapper;
 }
 
 function tryReadField <T>(jsonValue: any, matchesType: (fieldVal: any) => boolean,
@@ -88,13 +88,14 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
     if (isSimpleType(cls)) {
         return parseValue(cls, json, {propName: "array", type: cls, optional: true}, prefix, undefined, []);
     }
-    let constructorParams = <Array<RefType<any>>> _.clone(getMetadata("design:paramtypes", cls));
-    if (!constructorParams) {
-        const mapperKey = cls["name"] + "_" + typeof json;
+    let constructorParams = <Array<RefType<any>>> _.clone(getMetadata("design:paramtypes", cls));    
+    if (!constructorParams || isRegistrable(cls)) {
+        const clsName = getName(cls);
+        const mapperKey = clsName + "_" + typeof json;
         if (mapperRegister[mapperKey]) {
             return mapperRegister[mapperKey](json);
         }
-        throw new JsonParseError(`No mapper defined for types ${cls["name"]} and ${typeof json}`, JsonParseErrorCode.INVALID_MODEL_CLASS);
+        throw new JsonParseError(`No mapper defined for types ${clsName} and ${typeof json}`, JsonParseErrorCode.INVALID_MODEL_CLASS);
     }
     let jsonProps = _.times(constructorParams.length).map(n => <string> getMetadata("field:" + n, cls));
     if (genericTypes) {
@@ -140,6 +141,11 @@ function getGenericMetadata(props, index, cls, getMetadata) {
     }
 }
 function getName<T>(cls: RefType<T>) {
+    let getMetadata = (<any>Reflect).getMetadata;
+    const sparksonId = getMetadata("sparksonId", cls) as string;
+    if (sparksonId) {
+        return sparksonId;
+    }
     if (cls["type"]) {
         return cls["type"];
     }
@@ -154,6 +160,12 @@ function getName<T>(cls: RefType<T>) {
 function isSimpleType(cls: RefType<any>) {
     let typeName = getName(cls);
     return typeName === "String" || typeName === "Number" || typeName === "Boolean" || typeName == "DateClass";
+}
+
+function isRegistrable<T>(cls: RefType<T>) {
+    let getMetadata = (<any>Reflect).getMetadata;
+    const sparksonId = getMetadata("sparksonRegistrable", cls) as string;    
+    return !!sparksonId;
 }
 
 export function parse<T>(cls : RefType<T>, json: object): T {
