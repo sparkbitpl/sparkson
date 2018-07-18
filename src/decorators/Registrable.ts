@@ -1,4 +1,4 @@
-import * as r from "reflect-metadata";
+import "reflect-metadata";
 
 const RANGE = 10_000_000;
 

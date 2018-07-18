@@ -4,7 +4,8 @@ import {GenericTypes} from "./GenericTypes";
 import {ValidationRule} from "../decorators/validation/ValidationRule";
 import {JsonParseError, JsonParseErrorCode} from "./JsonParseError";
 import * as dateUtils from "../utils/DateUtils";
-//import * as Reflect from "reflect-metadata";
+import "reflect-metadata";
+
 /*tslint:disable no-any*/
 const mapperRegister: {[typeName: string]: Mapper<any, any>} = {};
 
@@ -142,7 +143,7 @@ function getGenericMetadata(props, index, cls, getMetadata) {
 }
 function getName<T>(cls: RefType<T>) {
     let getMetadata = (<any>Reflect).getMetadata;
-    const sparksonId = getMetadata("sparksonId", cls) as string;
+    const sparksonId = getMetadata("sparksonRegistrable", cls) as string;
     if (sparksonId) {
         return sparksonId;
     }
@@ -164,7 +165,7 @@ function isSimpleType(cls: RefType<any>) {
 
 function isRegistrable<T>(cls: RefType<T>) {
     let getMetadata = (<any>Reflect).getMetadata;
-    const sparksonId = getMetadata("sparksonRegistrable", cls) as string;    
+    const sparksonId = getMetadata("sparksonRegistrable", cls) as string;
     return !!sparksonId;
 }
 
