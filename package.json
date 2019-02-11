@@ -1,6 +1,6 @@
 {
   "name": "sparkson",
-  "version": "1.2.3",
+  "version": "1.3.0",
   "description": "Declarative JSON parsing and validation library for TypeScript",
   "main": "./lib/sparkson.js",
   "types": "./dts/sparkson.d.ts",
