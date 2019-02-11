@@ -1,5 +1,5 @@
 export {DateClass} from "./core/DateClass";
-export {JsonParseError} from "./core/JsonParseError";
+export {JsonParseError, JsonParseErrorCode} from "./core/JsonParseError";
 export {parse, parseArray, registerStringMapper, registerBooleanMapper, registerNumberMapper} from "./core/parser";
 export {RefType} from "./core/RefType";
 
