@@ -111,7 +111,7 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
     let generics = _.times(constructorParams.length).map(n => getGenericMetadata(jsonProps, n, cls, getMetadata));
     let validators = _.times(constructorParams.length).map(n => <string> getMetadata("validation:" + n, cls));
     let values = _.zip<any>(jsonProps, constructorParams, generics, validators).map(data => {
-        let spec = <{propName: string, type?: RefType<any>, optional: boolean}> data[0];
+        let spec = <{propName: string, type?: RefType<any>, optional: boolean, rawValue?: boolean}> data[0];
         let param = <RefType<any>> data[1];
         let genericTypes = data[2];
         let validators = data[3];
@@ -129,6 +129,9 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
         }
         if (!innerJson === undefined && !spec.optional) {
             throw new JsonParseError("Missing property " + spec.propName + " at path " + prefix, JsonParseErrorCode.MISSING_PROPERTY);
+        }
+        if (spec.rawValue) {
+          return innerJson;
         }
 
         return parseValue(param, innerJson, spec, prefix, genericTypes, validators || []);

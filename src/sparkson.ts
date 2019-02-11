@@ -5,6 +5,7 @@ export {RefType} from "./core/RefType";
 
 export {ArrayField} from "./decorators/ArrayField";
 export {Field} from "./decorators/Field";
+export {RawJsonField} from "./decorators/RawJsonField";
 
 export {Min} from "./decorators/validation/Min";
 export {Max} from "./decorators/validation/Max";

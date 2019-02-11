@@ -1,6 +1,6 @@
 import "jasmine";
 import "reflect-metadata";
-import {DateClass, Field, ArrayField, Registrable, Max, Min, Before, After, Regexp, Rule,
+import {DateClass, Field, RawJsonField, ArrayField, Registrable, Max, Min, Before, After, Regexp, Rule,
     MinLength, MaxLength, parse, JsonParseError, registerStringMapper, registerNumberMapper} from "../src/sparkson"
 
 // auxiliary model classes
@@ -62,6 +62,10 @@ class WithAfter {
 
 class WithRegex {
     constructor(@Field("str") @Regexp(/aa.*/) public str: string) {}
+}
+
+class WithRawJson {
+  constructor(@RawJsonField("raw") public raw: any) {}
 }
 
 function ensureEven(val: number) {
@@ -264,5 +268,24 @@ describe("sparkson", () => {
         registerStringMapper(Mapped, (v: string) => new Mapped(v));
         const obj = parse(WithMapped, {mapped: "foo"});
         expect(obj.mapped.getValue()).toBe("boom");
+    })
+
+    it("should parse raw json field", () => {
+      const json = {        
+        raw: {
+          numberField: 1,
+          stringField: "one",
+          arrayField: [1, "one"]
+        }
+      };
+      const parsed = parse(WithRawJson, json);
+
+      expect(parsed.raw).toBeDefined();
+      expect(parsed.raw.numberField).toBe(1);
+      expect(parsed.raw.stringField).toBe("one");
+      expect(parsed.raw.arrayField).toBeDefined();
+      expect(parsed.raw.arrayField instanceof Array).toBeTruthy();
+      expect(parsed.raw.arrayField[0]).toBe(1);
+      expect(parsed.raw.arrayField[1]).toBe("one");
     })
 })

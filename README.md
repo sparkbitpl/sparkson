@@ -20,7 +20,11 @@ with the following payload:
         {
             "title": "Journey to the Center of the Earth",
             "publication_year": 1864,
-            "original_title": "Voyage au centre de la Terre"
+            "original_title": "Voyage au centre de la Terre",
+            "unstructured_data": {
+                "original_book_cover_artist": "Édouard Riou",
+                "first_english_publication_year": 1871
+            }
         },
         {
             "title": "The Mysterious Island",
@@ -31,13 +35,14 @@ with the following payload:
 ```
 Using Sparkson, we can parse this payload to the following TypeScript model classes:
 ```typescript
-import {ArrayField, Field} from "sparkson";
+import {ArrayField, Field, RawJsonField} from "sparkson";
 
 export class Book {
     constructor(
         @Field("title") public title: string,
         @Field("publication_year") public publicationYear: number,
-        @Field("original_title", true) public originalTitle?: string
+        @Field("original_title", true) public originalTitle?: string,
+        @RawJsonField("unstructured_data", true) public additionalData: any
     ) {}
 }
 
@@ -65,6 +70,8 @@ will contain the location and type of the encountered problem.
 `@ArrayField` accepts and additional parameter - type of the array elements. Without this parameter Sparkson would not be able
 to validate the type of the array elements.
 
+`@RawJsonField` is used for unstructured data. `@RawJsonField` cast the json to the desired type - it does not use desired type's constructor. That means it's not possible to call methods on an argument deserialized using `@RawJsonField`.
+
 Parsing
 -----
 Now, we can parse the service response in the following way:
@@ -85,7 +92,11 @@ const books = parseArray(Book, [
     {
         "title": "Journey to the Center of the Earth",
         "publication_year": 1864,
-        "original_title": "Voyage au centre de la Terre"
+        "original_title": "Voyage au centre de la Terre",
+        "unstructured_data": {
+            "original_book_cover_artist": "Édouard Riou",
+            "first_english_publication_year": 1871
+        }
     },
     {
         "title": "The Mysterious Island",
