@@ -26,8 +26,7 @@
   "homepage": "https://github.com/sparkbitpl/sparkson#readme",
   "dependencies": {
     "lodash": "4.17.4",
-    "reflect-metadata": "0.1.12",
-    "typescript": "2.7.1"
+    "reflect-metadata": "0.1.12"
   },
   "devDependencies": {
     "@types/jasmine": "2.8.6",
@@ -41,6 +40,7 @@
     "jasmine-ts": "0.2.1",
     "path": "0.12.7",
     "run-sequence": "2.2.1",
+    "typescript": "2.7.1",
     "yargs": "11.0.0"
   }
 }
