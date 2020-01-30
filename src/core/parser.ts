@@ -39,14 +39,14 @@ function tryReadField <T>(jsonValue: any, matchesType: (fieldVal: any) => boolea
         throw error();
 }
 
-function parseValue(cls: RefType<any>, json: Object, spec: {propName: string, type?: RefType<any>, optional: boolean},
+function parseValue(cls: RefType<any>, json: Object, spec: {propName: string, type?: RefType<any>, optional: boolean, defaultValue?: any},
     prefix: string, genericTypes: GenericTypes, validators: ValidationRule[]): any {
     function propName() {
         return prefix + "/" + spec.propName;
     }
 
-    if (spec.optional && (json === undefined) || json === null) {
-        return undefined;
+    if (spec.optional && (json === undefined || json === null)) {
+        return spec.defaultValue;
     }
     const expectedTypeName = getName(cls);
     switch (expectedTypeName) {
@@ -77,7 +77,7 @@ function parseValue(cls: RefType<any>, json: Object, spec: {propName: string, ty
                 throw new JsonParseError("Missing type annotation for array property " + propName(), JsonParseErrorCode.INVALID_TYPE);
             }
             return tryReadField(json, fieldValue => _.isArray(fieldValue),
-                fieldValue => (<Array<any>>fieldValue).map((arrayElem, idx) => parseValue(spec.type, arrayElem, {propName: "[" + idx + "]", optional: false},
+                fieldValue => (<Array<any>>fieldValue).map((arrayElem, idx) => parseValue(spec.type, arrayElem, {propName: "[" + idx + "]", optional: false, defaultValue: undefined},
                     prefix + "/" + spec.propName, genericTypes, validators)),
                 () => new JsonParseError("Expected an array for property " + propName(), JsonParseErrorCode.INVALID_TYPE), validators, propName());
         default:
@@ -87,7 +87,7 @@ function parseValue(cls: RefType<any>, json: Object, spec: {propName: string, ty
 function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?: GenericTypes): any {
     let getMetadata = (<any>Reflect).getMetadata;
     if (isSimpleType(cls)) {
-        return parseValue(cls, json, {propName: "array", type: cls, optional: true}, prefix, undefined, []);
+        return parseValue(cls, json, {propName: "array", type: cls, optional: true, defaultValue: undefined}, prefix, undefined, []);
     }
     let constructorParams = <Array<RefType<any>>> _.clone(getMetadata("design:paramtypes", cls));    
     if (!constructorParams || isRegistrable(cls)) {
@@ -111,7 +111,7 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
     let generics = _.times(constructorParams.length).map(n => getGenericMetadata(jsonProps, n, cls, getMetadata));
     let validators = _.times(constructorParams.length).map(n => <string> getMetadata("validation:" + n, cls));
     let values = _.zip<any>(jsonProps, constructorParams, generics, validators).map(data => {
-        let spec = <{propName: string, type?: RefType<any>, optional: boolean, rawValue?: boolean}> data[0];
+        let spec = <{propName: string, type?: RefType<any>, optional: boolean, rawValue?: boolean, defaultValue?: any}> data[0];
         let param = <RefType<any>> data[1];
         let genericTypes = data[2];
         let validators = data[3];
@@ -173,12 +173,12 @@ function isRegistrable<T>(cls: RefType<T>) {
 }
 
 export function parse<T>(cls : RefType<T>, json: object): T {
-    return parseValue(cls, json, {propName: ".", optional: false}, "", undefined, []);
+    return parseValue(cls, json, {propName: ".", optional: false, defaultValue: undefined}, "", undefined, []);
 }
 export function parseArray<T>(cls: RefType<T>, json: object, optional = false): T[] {
     if (json === null && optional) {
         return [];
     }
-    return parseValue(Array, json, {propName: ".", optional: optional, type: cls}, "", undefined, []);
+    return parseValue(Array, json, {propName: ".", optional: optional, type: cls, defaultValue: undefined}, "", undefined, []);
 }
 /*tslint:enable no-any*/

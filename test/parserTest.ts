@@ -95,6 +95,10 @@ class WithMapped {
     constructor(@Field("mapped") public mapped: Mapped) {}
 }
 
+class WithDefaultValue {
+    constructor(@Field("defaultValue", true, null, "I am default!") public defaultValue?: string) {} 
+}
+
 describe("sparkson", () => {
     // email validation is temporarily disabled
     // it("should pass @Email validation", () => {
@@ -287,5 +291,11 @@ describe("sparkson", () => {
       expect(parsed.raw.arrayField instanceof Array).toBeTruthy();
       expect(parsed.raw.arrayField[0]).toBe(1);
       expect(parsed.raw.arrayField[1]).toBe("one");
+    })
+
+    fit("should handle default values", () =>{
+        const json = {};
+        const parsed = parse(WithDefaultValue, json);
+        expect(parsed.defaultValue).toBe("I am default!");
     })
 })
