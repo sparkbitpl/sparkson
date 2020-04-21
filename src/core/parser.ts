@@ -1,4 +1,7 @@
-import * as _ from "lodash";
+import isArray from "lodash/isArray";
+import zip from "lodash/zip";
+import times from "lodash/times";
+import clone from "lodash/clone";
 import {RefType} from "./RefType";
 import {GenericTypes} from "./GenericTypes";
 import {ValidationRule} from "../decorators/validation/ValidationRule";
@@ -76,7 +79,7 @@ function parseValue(cls: RefType<any>, json: Object, spec: {propName: string, ty
             if (!spec.type) {
                 throw new JsonParseError("Missing type annotation for array property " + propName(), JsonParseErrorCode.INVALID_TYPE);
             }
-            return tryReadField(json, fieldValue => _.isArray(fieldValue),
+            return tryReadField(json, fieldValue => isArray(fieldValue),
                 fieldValue => (<Array<any>>fieldValue).map((arrayElem, idx) => parseValue(spec.type, arrayElem, {propName: "[" + idx + "]", optional: false, defaultValue: undefined},
                     prefix + "/" + spec.propName, genericTypes, validators)),
                 () => new JsonParseError("Expected an array for property " + propName(), JsonParseErrorCode.INVALID_TYPE), validators, propName());
@@ -89,7 +92,7 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
     if (isSimpleType(cls)) {
         return parseValue(cls, json, {propName: "array", type: cls, optional: true, defaultValue: undefined}, prefix, undefined, []);
     }
-    let constructorParams = <Array<RefType<any>>> _.clone(getMetadata("design:paramtypes", cls));    
+    let constructorParams = <Array<RefType<any>>> clone(getMetadata("design:paramtypes", cls));    
     if (!constructorParams || isRegistrable(cls)) {
         const clsName = getName(cls);
         const mapperKey = clsName + "_" + typeof json;
@@ -98,7 +101,7 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
         }
         throw new JsonParseError(`No mapper defined for types ${clsName} and ${typeof json}`, JsonParseErrorCode.INVALID_MODEL_CLASS);
     }
-    let jsonProps = _.times(constructorParams.length).map(n => <string> getMetadata("field:" + n, cls));
+    let jsonProps = times(constructorParams.length).map(n => <string> getMetadata("field:" + n, cls));
     if (genericTypes) {
         jsonProps.forEach((prop, n) => {
             let spec = <any> prop;
@@ -108,9 +111,9 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
         });
     }
     let copyParams = <Array<RefType<any>>> getMetadata("design:paramtypes", cls);
-    let generics = _.times(constructorParams.length).map(n => getGenericMetadata(jsonProps, n, cls, getMetadata));
-    let validators = _.times(constructorParams.length).map(n => <string> getMetadata("validation:" + n, cls));
-    let values = _.zip<any>(jsonProps, constructorParams, generics, validators).map(data => {
+    let generics = times(constructorParams.length).map(n => getGenericMetadata(jsonProps, n, cls, getMetadata));
+    let validators = times(constructorParams.length).map(n => <string> getMetadata("validation:" + n, cls));
+    let values = zip<any>(jsonProps, constructorParams, generics, validators).map(data => {
         let spec = <{propName: string, type?: RefType<any>, optional: boolean, rawValue?: boolean, defaultValue?: any}> data[0];
         let param = <RefType<any>> data[1];
         let genericTypes = data[2];

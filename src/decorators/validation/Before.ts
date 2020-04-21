@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import {addValidationRule} from "./ValidationHelper";
 import * as dateUtils from "../../utils/DateUtils";
 

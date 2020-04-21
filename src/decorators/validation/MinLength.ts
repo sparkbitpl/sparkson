@@ -1,4 +1,3 @@
-import * as _ from "lodash";
 import {addValidationRule} from "./ValidationHelper";
 
 export function MinLength(value: number) {
