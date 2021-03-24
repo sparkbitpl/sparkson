@@ -1,4 +1,3 @@
-import keys from "lodash/keys";
 import {GenericTypes} from "../core/GenericTypes";
 import * as r from "reflect-metadata";
 
@@ -7,7 +6,7 @@ export function Field(jsonProperty: string, optional = false, genericTypes: Gene
         /*tslint:disable no-any*/
         (<any>Reflect).defineMetadata("field:" + parameterIndex, {propName: jsonProperty, optional: optional, defaultValue: defaultValue}, target);
         if (genericTypes) {
-            keys(genericTypes.types).forEach(id => {
+            Object.keys(genericTypes.types).forEach(id => {
                 (<any>Reflect).defineMetadata("generic:" + jsonProperty, genericTypes, target);
             })
         }

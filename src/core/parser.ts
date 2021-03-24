@@ -1,7 +1,4 @@
-import isArray from "lodash/isArray";
-import zip from "lodash/zip";
-import times from "lodash/times";
-import clone from "lodash/clone";
+import zip from "lodash.zip";
 import {RefType} from "./RefType";
 import {GenericTypes} from "./GenericTypes";
 import {ValidationRule} from "../decorators/validation/ValidationRule";
@@ -11,6 +8,9 @@ import "reflect-metadata";
 
 /*tslint:disable no-any*/
 const mapperRegister: {[typeName: string]: Mapper<any, any>} = {};
+
+const times = (value: number) => [...Array(value).keys()];
+const clone = (array: any[]) => [...array];
 
 export type Mapper<P, T> = (param: P) => T;
 
@@ -79,7 +79,7 @@ function parseValue(cls: RefType<any>, json: Object, spec: {propName: string, ty
             if (!spec.type) {
                 throw new JsonParseError("Missing type annotation for array property " + propName(), JsonParseErrorCode.INVALID_TYPE);
             }
-            return tryReadField(json, fieldValue => isArray(fieldValue),
+            return tryReadField(json, fieldValue => Array.isArray(fieldValue),
                 fieldValue => (<Array<any>>fieldValue).map((arrayElem, idx) => parseValue(spec.type, arrayElem, {propName: "[" + idx + "]", optional: false, defaultValue: undefined},
                     prefix + "/" + spec.propName, genericTypes, validators)),
                 () => new JsonParseError("Expected an array for property " + propName(), JsonParseErrorCode.INVALID_TYPE), validators, propName());
@@ -92,7 +92,7 @@ function doParse(cls: RefType<any>, json: Object, prefix: string, genericTypes?:
     if (isSimpleType(cls)) {
         return parseValue(cls, json, {propName: "array", type: cls, optional: true, defaultValue: undefined}, prefix, undefined, []);
     }
-    let constructorParams = <Array<RefType<any>>> clone(getMetadata("design:paramtypes", cls));    
+    let constructorParams = <Array<RefType<any>>> clone(getMetadata("design:paramtypes", cls));
     if (!constructorParams || isRegistrable(cls)) {
         const clsName = getName(cls);
         const mapperKey = clsName + "_" + typeof json;

@@ -25,21 +25,21 @@
   },
   "homepage": "https://github.com/sparkbitpl/sparkson#readme",
   "dependencies": {
-    "lodash": "4.17.4",
+    "lodash.zip": "4.2.0",
     "reflect-metadata": "0.1.12"
   },
   "devDependencies": {
     "@types/jasmine": "2.8.6",
-    "@types/reflect-metadata": "^0.1.0",
+    "@types/reflect-metadata": "0.1.0",
     "del": "3.0.0",
     "gulp": "4.0.2",
     "gulp-if": "2.0.2",
     "gulp-sourcemaps": "2.6.4",
     "gulp-typescript": "3.2.4",
+    "gulp4-run-sequence": "1.0.1",
     "jasmine": "2.9.0",
     "jasmine-ts": "0.2.1",
     "path": "0.12.7",
-    "gulp4-run-sequence": "1.0.1",
     "typescript": "2.7.1",
     "yargs": "11.0.0"
   }

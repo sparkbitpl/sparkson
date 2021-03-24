@@ -3,3 +3,6 @@ gulpfile.js
 tsconfig.json
 tslint.json
 npm-debug.log
+
+# System Files
+.DS_Store
