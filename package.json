@@ -25,6 +25,7 @@
   },
   "homepage": "https://github.com/sparkbitpl/sparkson#readme",
   "dependencies": {
+    "lodash.times": "4.3.2",
     "lodash.zip": "4.2.0",
     "reflect-metadata": "0.1.12"
   },

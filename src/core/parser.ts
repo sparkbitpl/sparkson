@@ -1,3 +1,4 @@
+import times from "lodash.times"
 import zip from "lodash.zip";
 import {RefType} from "./RefType";
 import {GenericTypes} from "./GenericTypes";
@@ -9,7 +10,6 @@ import "reflect-metadata";
 /*tslint:disable no-any*/
 const mapperRegister: {[typeName: string]: Mapper<any, any>} = {};
 
-const times = (value: number) => [...Array(value).keys()];
 const clone = (array: any[]) => [...array];
 
 export type Mapper<P, T> = (param: P) => T;
